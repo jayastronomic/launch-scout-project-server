@@ -26,6 +26,30 @@ RSpec.describe ReceiptsController, type: :request do
         }
       }
     }
+    let(:invalid_receipt_params) {
+      { receipt: {
+          retailer: "",
+          purchase_date: "2022-03-20",
+          purchase_time: "14:33",
+          items: [
+            {
+              "short_description": "Gatorade",
+              "price": "2.25"
+            },{
+              "short_description": "Gatorade",
+              "price": "2.25"
+            },{
+              "short_description": "Gatorade",
+              "price": "2.25"
+            },{
+              "short_description": "Gatorade",
+              "price": "2.25"
+            }
+          ],
+          total: "9.00"
+          }
+        }
+      }
     context "when receipt params are valid" do
       before(:each) do 
         post '/receipts/process', params: receipt_params
@@ -50,7 +74,28 @@ RSpec.describe ReceiptsController, type: :request do
         expect(res_obj[:id]).to match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
       end
     end
+
+    context "when receipt params are invalid" do
+      before(:each) do 
+        post '/receipts/process', params: invalid_receipt_params
+      end
+
+      let(:res_obj) { JSON.parse(response.body).deep_symbolize_keys }
+    
+      it "doesn't create a new receipt" do
+        expect { Receipt.all.length.to change.from(0).to(0) }
+      end
+
+      it 'returns a status code of 400' do
+        expect(response).to have_http_status(400)
+      end
+
+      it "returns a response with the key :errors" do
+        expect(res_obj.has_key?(:errors)).to be(true)
+      end
+    end
   end
+
 
   describe 'GET /receipts/:id/points' do 
      context "when receipt a receipt is" do
