@@ -10,7 +10,7 @@ class ReceiptsController < ApplicationController
           @new_receipt.save!    
           render json: { id: @new_receipt.id }, status: :created
         else
-          render json: { error: true, status: 400, description: "The sum of item prices must equal the total"}, status: :bad_request
+          render json: { errors: true, status: 400, description: "The sum of item prices must equal the total"}, status: :bad_request
         end
       else
         render json: { errors: @new_receipt.items, status: 400, description: "The receipt items are invalid"  }, status: :bad_request
