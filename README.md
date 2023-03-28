@@ -1,6 +1,5 @@
 # Receipt Processor Backend
 
-Hey Launch Scout Team! My name is Julian and here is the backend for my project!
 The tech stack I chose for the backend was Ruby on Rails and Docker. This is a light-weight rails project
 that is not hooked up to a database and uses an in-memory solution.
 
